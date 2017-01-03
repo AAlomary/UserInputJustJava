@@ -17,9 +17,17 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
         }
 
-        public void submitOrder(View view) {
+        public void addMore(View view) {
             display(1);
+        }
+
+        public void submitOrder(View view) {
             displayPrice();
+        }
+         public void minusMore(View view) {
+             if(total > 0) {
+                 display(-1);
+             }
         }
 
         private void display(int number) {
@@ -31,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         private void displayPrice() {
             TextView priceTextView = (TextView) findViewById(R.id.priceTextView);
             totalPrice = total * 5;
-            priceTextView.setText(NumberFormat.getCurrencyInstance().format(totalPrice));
+            priceTextView.setText("Total: " + NumberFormat.getCurrencyInstance().format(totalPrice));
         }
     }
 
