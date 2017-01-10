@@ -1,16 +1,15 @@
 package com.example.ahmadalomary.userinputjustjava;
 
+    import android.content.Context;
     import android.os.Bundle;
     import android.support.v7.app.AppCompatActivity;
     import android.view.View;
+    import android.view.inputmethod.InputMethodManager;
     import android.widget.CheckBox;
+    import android.widget.EditText;
     import android.widget.TextView;
 
-    import java.math.BigDecimal;
     import java.text.NumberFormat;
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,10 +18,13 @@ public class MainActivity extends AppCompatActivity {
     boolean wIsCheck = false;
     boolean IsCheck = false;
     boolean cIsCheck = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        View activity = (View) findViewById(R.id.activity_main);
+        closeKeyboardAndFocus(activity,R.id.activity_main);
     }
 
     public void addMore(View view) {
@@ -46,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayPrice() {
         TextView priceTextView = (TextView) findViewById(R.id.priceTextView);
+        EditText name = (EditText) findViewById(R.id.Name);
         int price = calculatePrice();
-        priceTextView.setText("Name: Ahmad\nQuantity: " + total + "\nTotal: " + NumberFormat.getCurrencyInstance().format(price) + "\nWhipped cream? " + wIsCheck + "\nChocolate? " + cIsCheck + "\nThank You!");
+        priceTextView.setText("Name: " + name.getText()  + "\nQuantity: " + total + "\nTotal: " + NumberFormat.getCurrencyInstance().format(price) + "\nWhipped cream? " + wIsCheck + "\nChocolate? " + cIsCheck + "\nThank You!");
 
     }
 
@@ -82,5 +85,49 @@ public class MainActivity extends AppCompatActivity {
         return cIsCheck;
     }
 
+
+
+
+
+
+
+
+
+
+
+    public static void closeKeyboard(View view) {
+        toggleKeyboard(view, false);
+    }
+
+    public static void showKeyboard(View view) {
+        toggleKeyboard(view, true);
+    }
+
+    private static void toggleKeyboard(View view, boolean show) {
+        if (view != null && view.getContext() != null) {
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            if (inputMethodManager != null) {
+                if (show) {
+                    inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                } else {
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+        }
+    }
+
+    public static void closeKeyboardAndFocus(View view, int resourceId) {
+        if (view != null) {
+            closeKeyboard(view);
+            View viewToFocus = view.findViewById(resourceId);
+
+            if (viewToFocus != null) {
+                viewToFocus.setFocusableInTouchMode(true);
+                viewToFocus.requestFocus();
+            }
+        }
+    }
 }
 
