@@ -1,6 +1,8 @@
 package com.example.ahmadalomary.userinputjustjava;
 
     import android.content.Context;
+    import android.content.Intent;
+    import android.net.Uri;
     import android.os.Bundle;
     import android.os.SystemClock;
     import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ package com.example.ahmadalomary.userinputjustjava;
     import android.widget.CheckBox;
     import android.widget.EditText;
     import android.widget.TextView;
+    import android.widget.Toast;
 
     import java.text.NumberFormat;
 
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     boolean wIsCheck = false;
     boolean IsCheck = false;
     boolean cIsCheck = false;
+    String output;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,31 @@ public class MainActivity extends AppCompatActivity {
 
     public void submitOrder(View view) {
         displayPrice();
+        composeEmail("ahmad.alomary@autotrader.co.uk", output);
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Toast.makeText(this, "fsd",Toast.LENGTH_SHORT);
+    }
+
+
+    public void composeEmail(String address, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_EMAIL, address);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
+//
+//        String url =  "http://www.google.com" ;
+//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//           startActivity(intent);
+    }
+
     private void display(int number) {
         TextView quantityTextView = (TextView) findViewById(R.id.quantityTextView);
         total += number;
@@ -54,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
         TextView priceTextView = (TextView) findViewById(R.id.priceTextView);
         EditText name = (EditText) findViewById(R.id.Name);
         int price = calcPriceWithExtras();
-        priceTextView.setText("Name: " + name.getText()  + "\nQuantity: " + total + "\nTotal: " + NumberFormat.getCurrencyInstance().format(price) + "\nWhipped cream? " + wIsCheck + "\nChocolate? " + cIsCheck + "\nThank You!");
+        output = ("Name: " + name.getText()  + "\nQuantity: " + total + "\nTotal: " + NumberFormat.getCurrencyInstance().format(price) + "\nWhipped cream? " + wIsCheck + "\nChocolate? " + cIsCheck + "\nThank You!");
+        priceTextView.setText(output);
 
     }
 
@@ -65,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
 
     public int calcPriceWithExtras(){
         if(cIsCheck && wIsCheck){
-            totalPrice = calculatePrice() + 3;
+            totalPrice = calculatePrice() + (3 * total);
         }else if(cIsCheck){
-            totalPrice = calculatePrice() + 2;
+            totalPrice = calculatePrice() + (2 * total);
         }else if(wIsCheck){
-            totalPrice = calculatePrice() + 1;
+            totalPrice = calculatePrice() + total;
         }else{
             totalPrice = calculatePrice();
         }
